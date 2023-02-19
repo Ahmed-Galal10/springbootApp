@@ -2,6 +2,7 @@ package com.learn.restful.controllers;
 
 import com.learn.restful.daos.UserDao;
 import com.learn.restful.models.User;
+import com.learn.restful.utils.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,14 +28,16 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getUserById(@PathVariable Integer userId) {
         User user = this.userDao.findById(userId);
-        if (Objects.isNull(user)) {
-            return new ResponseEntity<>(String.format("There is no user found with id %s", userId), HttpStatus.OK);
+
+        if (Objects.isNull(user)){
+            throw new UserNotFoundException(String.format("There is no user found with id %s", userId));
         }
+
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Object> addUsers(@RequestBody User user) {
+    public ResponseEntity<Object> addUser(@RequestBody User user) {
         User savedUser = this.userDao.save(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
