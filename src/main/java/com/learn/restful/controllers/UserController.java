@@ -4,6 +4,7 @@ import com.learn.restful.daos.UserDao;
 import com.learn.restful.models.User;
 import com.learn.restful.utils.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,9 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/users")
@@ -27,12 +31,17 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<Object> getUserById(@PathVariable Integer userId) {
+    public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
         User user = this.userDao.findById(userId);
 
         if (Objects.isNull(user)) {
             throw new UserNotFoundException(String.format("There is no user found with id %s", userId));
         }
+
+        //HATEOAS
+        // getAllUsers link --> note that User class extends RepresentationModel<User>
+        Link allUsersLink = linkTo(methodOn(UserController.class).getAllUsers()).withRel("All-Users");
+        user.add(allUsersLink);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
