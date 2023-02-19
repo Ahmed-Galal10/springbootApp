@@ -20,21 +20,21 @@ public class UserController {
     UserDao userDao;
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers(){
+    public ResponseEntity<List<User>> getAllUsers() {
         return new ResponseEntity<>(userDao.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<Object> getAllUsers(@PathVariable Integer userId){
+    public ResponseEntity<Object> getUserById(@PathVariable Integer userId) {
         User user = this.userDao.findById(userId);
-        if (Objects.isNull(user)){
-            return new ResponseEntity<>(String.format("There is no user found with id %s",userId), HttpStatus.OK);
+        if (Objects.isNull(user)) {
+            return new ResponseEntity<>(String.format("There is no user found with id %s", userId), HttpStatus.OK);
         }
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Object> addUsers(@RequestBody User user){
+    public ResponseEntity<Object> addUsers(@RequestBody User user) {
         User savedUser = this.userDao.save(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

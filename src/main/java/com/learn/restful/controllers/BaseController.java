@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BaseController {
 
     @GetMapping("/hello/{name}")
-    public HelloBean helloBean(@PathVariable String name){
+    public HelloBean helloBean(@PathVariable String name) {
         return new HelloBean(String.format("Hello %s", name));
     }
 }
