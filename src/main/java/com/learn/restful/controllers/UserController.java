@@ -29,7 +29,7 @@ public class UserController {
     public ResponseEntity<Object> getUserById(@PathVariable Integer userId) {
         User user = this.userDao.findById(userId);
 
-        if (Objects.isNull(user)){
+        if (Objects.isNull(user)) {
             throw new UserNotFoundException(String.format("There is no user found with id %s", userId));
         }
 
@@ -45,5 +45,16 @@ public class UserController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Object> deleteUserById(@PathVariable Integer userId) {
+        User user = this.userDao.deleteById(userId);
+
+        if (Objects.isNull(user)) {
+            throw new UserNotFoundException(String.format("There is no user found with id %s", userId));
+        }
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
