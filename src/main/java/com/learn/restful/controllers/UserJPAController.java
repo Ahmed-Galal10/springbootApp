@@ -2,6 +2,7 @@ package com.learn.restful.controllers;
 
 import com.learn.restful.models.Post;
 import com.learn.restful.models.User;
+import com.learn.restful.repository.PostRepo;
 import com.learn.restful.repository.UserRepo;
 import com.learn.restful.utils.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class UserJPAController {
 
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private PostRepo postRepo;
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
@@ -65,6 +68,25 @@ public class UserJPAController {
         List<Post> posts = user.get().getPosts();
 
         return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @PostMapping("/{userId}/posts")
+    public ResponseEntity<Object> createPost(@PathVariable Integer userId, @Valid @RequestBody Post post) {
+        Optional<User> user = this.userRepo.findById(userId);
+
+        if (user.isEmpty()) {
+            throw new UserNotFoundException(String.format("There is no user found with id %s", userId));
+        }
+
+        post.setUser(user.get());
+        Post savedPost = this.postRepo.save(post);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedPost.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
 
