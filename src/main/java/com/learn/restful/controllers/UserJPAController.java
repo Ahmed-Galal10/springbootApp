@@ -1,5 +1,6 @@
 package com.learn.restful.controllers;
 
+import com.learn.restful.models.Post;
 import com.learn.restful.models.User;
 import com.learn.restful.repository.UserRepo;
 import com.learn.restful.utils.exception.UserNotFoundException;
@@ -52,4 +53,19 @@ public class UserJPAController {
     public void deleteUserById(@PathVariable Integer userId) {
         this.userRepo.deleteById(userId);
     }
+
+    @GetMapping("/{userId}/posts")
+    public ResponseEntity<List<Post>> getAllPostsByUserId(@PathVariable Integer userId) {
+        Optional<User> user = this.userRepo.findById(userId);
+
+        if (user.isEmpty()) {
+            throw new UserNotFoundException(String.format("There is no user found with id %s", userId));
+        }
+
+        List<Post> posts = user.get().getPosts();
+
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+
 }
