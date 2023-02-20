@@ -6,12 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,6 +24,8 @@ public class User extends RepresentationModel<User> implements Serializable {
     private Integer id;
     @Size(min = 2, message = "Name must have 2 characters at least")
     private String name;
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts;
 //    @Past
 //    private Date birthDate;
 

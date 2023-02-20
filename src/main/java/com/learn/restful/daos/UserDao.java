@@ -1,5 +1,6 @@
 package com.learn.restful.daos;
 
+import com.learn.restful.models.Post;
 import com.learn.restful.models.User;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +14,8 @@ public class UserDao {
     private static Integer userCounter = 2;
 
     static {
-        users.add(new User(1, "Ahmed"));
-        users.add(new User(2, "Hager"));
+        users.add(new User(1, "Ahmed", List.of(new Post(1001, "first post"))));
+        users.add(new User(2, "Hager", List.of(new Post(1002, "second post"))));
     }
 
     public List<User> findAll() {
