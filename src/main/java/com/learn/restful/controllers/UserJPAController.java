@@ -1,6 +1,5 @@
 package com.learn.restful.controllers;
 
-import com.learn.restful.daos.UserDao;
 import com.learn.restful.models.User;
 import com.learn.restful.repository.UserRepo;
 import com.learn.restful.utils.exception.UserNotFoundException;
@@ -13,15 +12,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/jpa/users")
 public class UserJPAController {
-
-    @Autowired
-    UserDao userDao;
 
     @Autowired
     private UserRepo userRepo;
@@ -54,13 +49,7 @@ public class UserJPAController {
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Object> deleteUserById(@PathVariable Integer userId) {
-        User user = this.userDao.deleteById(userId);
-
-        if (Objects.isNull(user)) {
-            throw new UserNotFoundException(String.format("There is no user found with id %s", userId));
-        }
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public void deleteUserById(@PathVariable Integer userId) {
+        this.userRepo.deleteById(userId);
     }
 }
