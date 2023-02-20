@@ -4,7 +4,6 @@ import com.learn.restful.models.User;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,8 +13,8 @@ public class UserDao {
     private static Integer userCounter = 2;
 
     static {
-        users.add(new User(1, "Ahmed", new Date()));
-        users.add(new User(2, "Hager", new Date()));
+        users.add(new User(1, "Ahmed"));
+        users.add(new User(2, "Hager"));
     }
 
     public List<User> findAll() {
