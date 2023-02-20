@@ -41,7 +41,9 @@ public class UserController {
         //HATEOAS
         // getAllUsers link --> note that User class extends RepresentationModel<User>
         Link allUsersLink = linkTo(methodOn(UserController.class).getAllUsers()).withRel("All-Users");
-        user.add(allUsersLink);
+        if (user.getLink("All-Users").isEmpty()){
+            user.add(allUsersLink);
+        }
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
